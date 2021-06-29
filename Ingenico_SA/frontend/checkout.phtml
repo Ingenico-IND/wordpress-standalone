@@ -1,0 +1,150 @@
+<?php enqueue_style_script(); ?>
+<div>
+	<button id="btn-ingenico" data-encrypt='#encrypt#'>Pay with Ingenico</button>
+</div>
+<div id="ingenico_payment_form"></div>
+<script src="https://www.paynimo.com/paynimocheckout/client/lib/jquery.min.js"></script>
+<script type="text/javascript" src="#liveurl#"></script>
+<div class="popup" id="popup-1">
+	<div class="overlay"></div>
+	<div class="content" id="checkout_content" style="background-color: #bgcolor#; color: #txtcolor#">
+		<div class="close" id="checkout_close" onclick="togglePopup()">×</div>
+		<div id='response'></div>
+</div>
+<script>
+	$(document).ready(function() {
+		function handleResponse(res) {
+			if (typeof res != 'undefined' && typeof res.paymentMethod != 'undefined' && typeof res.paymentMethod.paymentTransaction != 'undefined' && typeof res.paymentMethod.paymentTransaction.statusCode != 'undefined')
+			{
+				var response = JSON.parse(JSON.stringify(res));
+				var mydata = response.stringResponse;
+				
+				$.ajax({
+					url: '#ajaxurl#',
+					type: 'GET',
+					data: {
+						'action'	: 'ingenico_response_handle',
+						'msg'		: mydata,
+					},
+					contentType: "application/json; charset=utf-8",
+					success: function(data){
+						console.log(#showresponsemsg#);
+						if (!#showresponsemsg#){
+							showModal(data);
+						}
+					},
+					error:function(error){
+						console.log('Error')
+					}
+				});
+			}
+		}
+
+		function showModal(response) {
+			$('#response').html(response);
+			document.getElementById("popup-1").classList.toggle("active");
+		}
+
+		function togglePopup() {
+			document.getElementById("popup-1").classList.toggle("active");
+		}
+
+		$("#btn-ingenico").click(function(e){
+			e.preventDefault();
+			document.getElementById("btn-ingenico").disabled = true;
+			var obj = $(this).data('encrypt');
+
+			$.ajax({
+				url: '#ajaxurl#',
+				type: 'GET',
+				data: {
+					'action' 				: 'save_to_db',
+					'order_id'				: obj['data'][34],
+					'user_id'				: obj['data'][8],
+					'product_name'			: obj['data'][35],
+					'amount'				: obj['data'][2],
+					'merchant_identifier' 	: obj['data'][1],
+					'created_dt'			: obj['data'][36],
+					'currency'				: obj['data'][15],
+					'datastring'			: obj['data'][37]
+				},
+				contentType: "application/json; charset=utf-8",
+				success: function(data){
+					console.log();
+				},
+				error:function(error){
+					console.log('Error')
+				}
+			});
+
+			var configJson = {
+				'tarCall': false,
+				'features': {
+					'showPGResponseMsg': #showresponsemsg#,
+					'enableNewWindowFlow': true,
+					'enableAbortResponse': true,
+					'enableExpressPay': obj['data'][18],
+					'enableMerTxnDetails': obj['data'][17],
+					'enableInstrumentDeRegistration' : obj['data'][19], 
+					'hideSavedInstruments': obj['data'][20],
+					'separateCardMode' : obj['data'][21],
+				},
+				'consumerData': {
+					'deviceId': 'WEBSH2',
+					'token': obj['hash'],
+					'returnUrl': obj['data'][12],
+					'responseHandler': handleResponse,
+					'checkoutElement': obj['data'][16],
+					'paymentMode': obj['data'][22],
+					'paymentModeOrder': obj['data'][32],
+					'merchantLogoUrl': obj['data'][23],  
+					'merchantMsg': obj['data'][24],
+					'disclaimerMsg': obj['data'][25],
+					'merchantId': obj['data'][0],
+					'currency': obj['data'][15],
+					'consumerId': obj['data'][8],
+					'consumerMobileNo': obj['data'][9],
+					'consumerEmailId': obj['data'][10],
+					'txnId': obj['data'][1],   
+					'txnType': obj['data'][26],
+					'items': [{
+						'itemId': obj['data'][14],
+						'amount': obj['data'][2],
+						'comAmt': '0'
+					}],
+					'cartDescription': '}{custname:'+obj['data'][13]+'}{orderid:'+obj['data'][34],
+					'merRefDetails': [
+					{"name": "Txn. Ref. ID", "value": obj['data'][1]}
+					],
+					'customStyle': {
+						'PRIMARY_COLOR_CODE': obj['data'][27],   
+						'SECONDARY_COLOR_CODE': obj['data'][28],
+						'BUTTON_COLOR_CODE_1': obj['data'][29],
+						'BUTTON_COLOR_CODE_2': obj['data'][30]
+					},
+					'accountNo': obj['data'][11],
+					'accountHolderName': '',
+					'ifscCode': '',        
+					'accountType': '', 
+					'debitStartDate': obj['data'][3],
+					'debitEndDate': obj['data'][4],
+					'maxAmount': obj['data'][5],
+					'amountType': obj['data'][6],
+					'saveInstrument': obj['data'][31],
+					'frequency': obj['data'][7]  
+				}
+			};
+			$.pnCheckout(configJson);
+			if(configJson.features.enableNewWindowFlow){
+				pnCheckoutShared.openNewWindow();
+			}
+			$("#checkout_close, .confirmBox .errBtnCancel, .confirmBox .checkout_btn").on("click", function () {
+				window.location = obj['data'][33];  
+				document.getElementById("btn-ingenico").disabled = false;
+			});
+			$(".checkout-detail-box-inner .popup-close").on("click", function () {
+				document.getElementById("btn-ingenico").disabled = false;
+			});
+		});
+	});
+</script>
