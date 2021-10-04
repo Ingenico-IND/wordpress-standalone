@@ -61,7 +61,7 @@ function Insert_data(data , msg){
 				<th> ${OBJ.merchantTransactionIdentifier} </th>
 			</tr>
 			<tr>
-				<th id = "left-item">Ingenico Transaction ID</th>
+				<th id = "left-item">worldline Transaction ID</th>
 				<th> ${OBJ.identifier} </th>
 			</tr>
 			<tr>
