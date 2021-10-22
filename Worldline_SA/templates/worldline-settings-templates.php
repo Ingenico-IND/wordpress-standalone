@@ -320,7 +320,7 @@ class worldline_Templates
             <option value="NEFTRTGS" {$selected_NEFTRTGS}>NEFTRTGS</option>
             <option value="emiBanks" {$selected_emiBanks}>emiBanks</option>
         </select><br>
-        <label for ="payment_mode">If Bank selection is at worldline ePayments India Pvt. Ltd. (a Worldline brand) end then select all, if bank selection at Merchant end then pass appropriate mode respective to selected option</label>
+        <label for ="payment_mode">If Bank selection is at worldline ePayments India Pvt. Ltd. end then select all, if bank selection at Merchant end then pass appropriate mode respective to selected option</label>
         EOT;
 
                                                                                                                                                 echo $payment_mode;

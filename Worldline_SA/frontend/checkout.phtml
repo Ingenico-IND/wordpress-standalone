@@ -1,6 +1,6 @@
 <?php enqueue_style_script(); ?>
 <div>
-	<button id="btn-worldline" data-encrypt='#encrypt#'>Pay with worldline</button>
+	<button id="btn-worldline" data-encrypt='#encrypt#'>Cards / UPI / Netbanking / Wallets</button>
 </div>
 <div id="worldline_payment_form"></div>
 <script src="https://www.paynimo.com/paynimocheckout/client/lib/jquery.min.js"></script>
@@ -27,8 +27,8 @@
 						},
 						contentType: "application/json; charset=utf-8",
 						success: function(data) {
-							console.log(#showresponsemsg#);
-							if (!#showresponsemsg#) {
+							console.log(#showresponsemsg #);
+							if (!#showresponsemsg #) {
 								showModal(data);
 							}
 						},
@@ -79,7 +79,7 @@
 				var configJson = {
 					'tarCall': false,
 					'features': {
-						'showPGResponseMsg': #showresponsemsg#,
+						'showPGResponseMsg': #showresponsemsg #,
 						'enableNewWindowFlow': true,
 						'enableAbortResponse': true,
 						'enableExpressPay': obj['data'][18],
