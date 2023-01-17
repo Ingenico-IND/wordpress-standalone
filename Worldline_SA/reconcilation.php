@@ -1,6 +1,5 @@
 <?php
-
-require_once('worldline_SA.php');
+require_once(dirname(__FILE__) . '/Worldline_SA.php');
 add_action('admin_menu', 'Reconcilation_page');
 function Reconcilation_page()
 {

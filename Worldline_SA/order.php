@@ -1,5 +1,5 @@
 <?php
-require_once('worldline_SA.php');
+require_once(dirname(__FILE__) . '/Worldline_SA.php');
 include_once(dirname(__FILE__) . '/database_worldline.php');
 
 add_action('admin_menu', 'orderpage');
