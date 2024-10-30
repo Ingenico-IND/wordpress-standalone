@@ -165,7 +165,7 @@ function wordpressworldlineInit()
             if ($this->payment_type == "test") {
                 $amount = 1;
             } else {
-                $amount = (int) (number_format($metadata['amount'][0]));
+                $amount = isset($metadata['amount'][0]) && is_numeric($metadata['amount'][0]) ? (float) $metadata['amount'][0] : 0.0;
             }
             if (empty($amount)) {
                 $amount = 1;
